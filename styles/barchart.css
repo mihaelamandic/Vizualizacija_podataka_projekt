@@ -1,0 +1,77 @@
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: lightblue;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.tooltip {
+  position: absolute;
+  padding: 10px;
+  font: 12px sans-serif;
+  background: #222;
+  color: #fff;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0.9;
+  visibility: hidden;
+}
+
+/* //finale.html */
+.rectangle:hover{
+    opacity: 0.66;
+  }
+
+  #container > .first {
+    display:inline-block;
+    float:left;
+    width:100px;
+  }
+  
+  #container > .second {
+    display:inline-block;
+    float:right;
+    margin: 0 auto;
+    width:100px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Create two equal columns that floats next to each other */
+  .column2 {
+    float: left;
+    width: 70%;
+    padding: 10px;
+  }
+  
+  .column1 {
+    float: right;
+    width: 30%;
+    padding: 10px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }

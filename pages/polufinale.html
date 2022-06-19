@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+
+<head>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/barchart.css">
+
+    <title>Rezultati glasovanja na Euroviziji 2018. godine - polufinale</title>
+</head>
+
+<body>
+    <h1>Rezultati glasovanja komisije, publike i ukupno - POLUFINALE</h1>
+    <h2 class="title" style="text-align: center;"></h2>
+    <div id="barchart"></div>
+    <div id="bar" class="ms-2"></div>
+
+
+    <!-- https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4 -->
+    <script>
+
+        // set the dimensions and margins of the graph
+        var margin = { top: 30, right: 30, bottom: 70, left: 60 };
+        var width = 1800 - margin.left - margin.right;
+        var height = 500 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3.select("#barchart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        // Initialize the X axis
+        var x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.2);
+        var xAxis = svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .style("font-family", "Poppins")
+            .style("font-size", "8.7px")
+
+        // Initialize the Y axis
+        var y = d3.scaleLinear()
+            .range([height, 0]);
+        var yAxis = svg.append("g")
+            .attr("class", "myYaxis")
+
+
+        // A function that create / update the plot for a given variable:
+        function update(selectedVar) {
+
+            // Parse the Data
+            d3.json("../db/db_contest.json", function (data) {
+
+                var text = "";
+                if (selectedVar == "points_jury_sf") {
+                    text = "Bodovanje od komisije"
+                }
+                if (selectedVar == "points_tele_sf") {
+                    text = "Bodovanje od publike"
+                }
+                if (selectedVar == "points_sf") {
+                    text = "Ukupni bodovi"
+                }
+                var title = d3.selectAll(".title")
+                title
+                    .enter()
+                    .append("text")
+                    .attr("class", "title")
+                    .merge(title)
+                    .attr("x", (width / 2))
+                    .attr("y", 0 - (margin.top / 2))
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "25px")
+                    .style("text-decoration", "underline")
+                    .text(text);
+
+                // X axis
+                x.domain(data.map(function (d) { if (d['place_sf'] != null) return d['to_country']; }))     
+                xAxis.transition().duration(1000).call(d3.axisBottom(x))
+                
+
+                // Add Y axis
+                y.domain([0, d3.max(data, function (d) { return d[selectedVar]; }) * 1.1]);
+                yAxis.transition().duration(1000).call(d3.axisLeft(y));
+
+                // variable u: map data to existing bars
+                var u = svg.selectAll("rect")
+                    .data(data)
+
+                // update bars
+                u
+                    .enter()
+                    .append("rect")
+                    .attr("class", "bar")
+                    .merge(u)
+                    .transition()
+                    .duration(1000)
+                    .attr("x", function (d) {
+                        if (d['place_sf'] != null) {
+                            return x(d['to_country']);
+                        }
+                    })
+                    .attr("y", function (d) { return y(d[selectedVar]); })
+                    .attr("width", x.bandwidth())
+                    .attr("height", function (d) { return height - y(d[selectedVar]); })
+
+
+                ///////////////////////
+                var bar = svg.selectAll(".bar");
+                // Tooltips
+                var tooltip = d3.select("body").append("div")
+                    .attr("class", "tooltip");
+
+                bar.on("mouseover", function (d) {
+                    tooltip.html(d[selectedVar])
+                        .style("visibility", "visible");
+                })
+                    .on("mousemove", function (d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 50 + "px")
+                            .style("top", d3.event.pageY - 70 + "px")
+                            .style("display", "inline-block")
+                            .html((d[selectedVar]));
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.style("visibility", "hidden");
+                    });
+            })
+
+        }
+
+        // Initialize plot
+        update('points_jury_sf')
+
+    </script>
+
+    <div style="text-align: center;">
+        <button onclick="update('points_jury_sf')">Komisija</button>
+        <button onclick="update('points_tele_sf')">Publika</button>
+        <button onclick="update('points_sf')">Ukupno</button>
+    </div>
+
+</body>
+
+</html>

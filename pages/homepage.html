@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <link rel="stylesheet" href="../styles/barchart.css">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rezultati glasovanja na Euroviziji 2018. godine</title>
+
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/superhero/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>Rezultati glasovanja na Euroviziji 2018. godine</h1>
+    <div class="row">
+        <div class="col-xs-6">
+            <a href="polufinale.html" class="btn btn-primary active float-left" role="button"
+                aria-pressed="true">Rezultati polufinala</a>
+            <a href="finale.html" class="btn btn-success active float-left" role="button" aria-pressed="true">Detalji
+                rezultata finala</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column1" id="map_text" style="background-color:#aaa;">
+        </div>
+        <div class="column2" id="map_elements" style="background-color:#bbb;">
+        </div>
+    </div>
+    <!-- https://www.geeksforgeeks.org/d3-js-geomercator-function/ -->
+    <script type="text/javascript">
+
+        function zoomed() {
+            projection.translate(d3.event.translate).scale(d3.event.scale);
+            g.selectAll("path").attr("d", path);
+        }
+
+
+        var width = 1350;
+        var height = 700;
+
+        var projection = d3.geo.mercator()
+            .scale(width / 1.8 / Math.PI)
+            .rotate([0, 0])
+            .center([0, 0])
+            .translate([width / 3, height / 1.4]);
+
+        var path = d3.geo.path()
+            .projection(projection);
+
+        var svg = d3.select("#map_elements")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("background", "white");
+
+        d3.select("#map_text").append("div")
+            .attr("id", "country");
+
+        var zoom = d3.behavior.zoom()
+            .translate(projection.translate())
+            .scale(projection.scale())
+            .scaleExtent([height / 2.7, 2 * height])
+            .on("zoom", zoomed);
+
+        var g = svg.append("g")
+            .call(zoom);
+
+
+        d3.json("../db/countries_topo.json", function (error, countri) {
+            var data = topojson.feature(countri, countri.objects.countries_geo);
+            var states = g.selectAll("path.code")
+                .data(data.features)
+                .enter()
+                .append("path")
+
+                .attr("d", path)
+
+                .style("fill", function (d) {
+                    if (d.properties.bodovi_od_drugih_drzava_finale == "") {
+                        return "#525252"
+                    }
+                    else
+                        return "#003399"
+
+                })
+                .style("stroke", "black")
+                .style("stroke-width", 1)
+                .style("stroke-opacity", 1)
+
+
+                .on("mouseover", function (d) {
+                    d3.select("#country")
+                        .html("Naziv države: " + d.properties.name + "</br>" + "  Ukupan broj dobivenih bodova od drugih država:" + "</br>" + d.properties.bodovi_od_drugih_drzava_finale + "</br>");
+                    d3.select(this).style("stroke", "red").style("stroke-width", 5);
+
+
+                    var obj = d.properties.bodovi_od_drugih_drzava_finale
+                    var arr = obj.replaceAll(':', '$').replaceAll(' ', '').replaceAll(',', '$').split('$');
+                    arr = arr.filter(element => isNaN(parseInt(element)))
+                    console.log(arr)
+
+
+                    states.style("fill", function (d, i) {
+                        if (d.properties.name === arr[0]) { return "green"; }
+                        if (d.properties.name === arr[1]) { return "green"; }
+                        if (d.properties.name === arr[2]) { return "green"; }
+                        if (d.properties.name === arr[3]) { return "green"; }
+                        if (d.properties.name === arr[4]) { return "green"; }
+                        if (d.properties.name === arr[5]) { return "green"; }
+                        if (d.properties.name === arr[6]) { return "green"; }
+                        if (d.properties.name === arr[7]) { return "green"; }
+                        if (d.properties.name === arr[8]) { return "green"; }
+                        if (d.properties.name === arr[9]) { return "green"; }
+                        if (d.properties.name === arr[10]) { return "green"; }
+                        if (d.properties.name === arr[11]) { return "green"; }
+                        if (d.properties.name === arr[12]) { return "green"; }
+                        if (d.properties.name === arr[13]) { return "green"; }
+                        if (d.properties.name === arr[14]) { return "green"; }
+                        if (d.properties.name === arr[15]) { return "green"; }
+                        if (d.properties.name === arr[16]) { return "green"; }
+                        if (d.properties.name === arr[17]) { return "green"; }
+                        if (d.properties.name === arr[18]) { return "green"; }
+                        if (d.properties.name === arr[19]) { return "green"; }
+                        if (d.properties.name === arr[20]) { return "green"; }
+                        if (d.properties.name === arr[21]) { return "green"; }
+                        if (d.properties.name === arr[22]) { return "green"; }
+                        if (d.properties.name === arr[23]) { return "green"; }
+                        if (d.properties.name === arr[24]) { return "green"; }
+                        if (d.properties.name === arr[25]) { return "green"; }
+                        if (d.properties.name === arr[26]) { return "green"; }
+                        if (d.properties.name === arr[27]) { return "green"; }
+                        if (d.properties.name === arr[28]) { return "green"; }
+                        if (d.properties.name === arr[29]) { return "green"; }
+                        if (d.properties.name === arr[30]) { return "green"; }
+                        if (d.properties.name === arr[31]) { return "green"; }
+                        if (d.properties.name === arr[32]) { return "green"; }
+                        if (d.properties.name === arr[33]) { return "green"; }
+                        if (d.properties.name === arr[34]) { return "green"; }
+                        if (d.properties.name === arr[35]) { return "green"; }
+                        if (d.properties.name === arr[36]) { return "green"; }
+                        if (d.properties.name === arr[37]) { return "green"; }
+                        if (d.properties.name === arr[38]) { return "green"; }
+                        if (d.properties.name === arr[39]) { return "green"; }
+                        if (d.properties.name === arr[40]) { return "green"; }
+                        if (d.properties.name === arr[41]) { return "green"; }
+                        if (d.properties.name === arr[42]) { return "green"; }
+                        if (d.properties.name === arr[43]) { return "green"; }
+                        else {
+
+
+
+                            return "#525252"
+
+
+
+                        }
+                    })
+
+
+
+
+
+
+                })
+
+                .on("mouseout", function (d) {
+                    d3.select(this).style("stroke-width", 1).style("stroke", "black")
+                    states.style("fill", function (d, i) {
+
+                        if (d.properties.bodovi_od_drugih_drzava_finale == "") {
+                            return "#525252"
+                        }
+                        else
+                            return "#003399"
+
+                    })
+                }
+                );
+
+
+        });
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>
